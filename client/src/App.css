@@ -22,37 +22,10 @@
 
 .app-shell {
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  background: var(--warm-cream);
-}
-
-.navbar {
-  flex-shrink: 0;
-}
-
-.page-content {
-  flex: 1;
-}
-
-@media (max-width: 640px) {
-  .nav-links {
-    display: none;
-  }
-
-  .nav-right {
-    gap: 0.75rem;
-  }
-
-  .nav-user-info {
-    display: none;
-  }
 }
 
 .page-content {
   padding: 2rem 0 4rem;
-  background: var(--warm-cream);
-  min-height: calc(100vh - 76px);
 }
 
 .navbar {
@@ -69,30 +42,7 @@
   align-items: center;
   justify-content: space-between;
   min-height: 76px;
-  gap: 2rem;
-}
-
-.nav-right {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-  margin-left: auto;
-}
-
-.nav-user-info {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.user-name {
-  color: rgba(255, 255, 255, 0.9);
-  font-weight: 600;
-  font-size: 0.95rem;
-  max-width: 120px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  gap: 1rem;
 }
 
 .logo-wrap {
@@ -139,43 +89,10 @@
 .page-shell {
   width: min(var(--max-width), calc(100% - 2rem));
   margin: 0 auto;
-  padding-top: 2.5rem;
 }
 
 .narrow-page {
   max-width: 760px;
-}
-
-.dashboard-welcome {
-  background: linear-gradient(135deg, #0F3D3E 0%, rgba(15, 61, 62, 0.9) 100%);
-  border-radius: 24px;
-  padding: 3rem 2.5rem;
-  color: var(--white);
-  box-shadow: 0 16px 40px rgba(15, 61, 62, 0.12);
-  position: relative;
-  overflow: hidden;
-  margin-bottom: 2.5rem;
-  animation: panelSlideIn 0.6s ease-out;
-}
-
-.welcome-content {
-  max-width: 600px;
-}
-
-.dashboard-welcome h1 {
-  font-size: clamp(1.8rem, 3vw, 2.8rem);
-  margin-top: 0;
-  margin-bottom: 0.8rem;
-  letter-spacing: -0.02em;
-  font-weight: 800;
-  color: var(--white);
-}
-
-.dashboard-welcome p {
-  font-size: 1.05rem;
-  color: rgba(255, 255, 255, 0.85);
-  margin: 0 0 1.5rem 0;
-  line-height: 1.6;
 }
 
 .hero-panel {
@@ -266,7 +183,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: 10px;
+  border-radius: 12px;
   border: none;
   padding: 0.85rem 1.2rem;
   font-weight: 700;

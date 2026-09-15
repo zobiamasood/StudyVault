@@ -1,20 +1,18 @@
 import { Routes, Route } from 'react-router-dom';
-import Navbar from './components/Navbar';
+import Navbar from './components/NavbarModern';
 import ProtectedRoute from './components/ProtectedRoute';
-import Dashboard from './pages/Dashboard';
-import Resources from './pages/Resources';
-import AddResource from './pages/AddResource';
-import EditResource from './pages/EditResource';
-import ResourceDetails from './pages/ResourceDetails';
-import Login from './pages/Login';
-import Signup from './pages/Signup';
-import './App.css';
-
+import Dashboard from './pages/DashboardFinal';
+import Resources from './pages/ResourcesModern';
+import AddResource from './pages/AddResourceModern';
+import EditResource from './pages/EditResourceModern';
+import ResourceDetails from './pages/ResourceDetailsModern';
+import Login from './pages/LoginModern';
+import Signup from './pages/SignupModern';
 function App() {
   return (
-    <div className="app-shell">
+    <div className="min-h-screen bg-warm-cream">
       <Navbar />
-      <main className="page-content">
+      <main className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />

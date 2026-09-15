@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Resource = require('../models/Resource');
 
 const validateResource = (data) => {
-  const { title, subject, category } = data;
+  const { title, subject, category, resourceLink } = data;
 
   if (!title || !title.trim()) {
     return 'Title is required.';
@@ -14,6 +14,17 @@ const validateResource = (data) => {
 
   if (!category || !category.trim()) {
     return 'Category is required.';
+  }
+
+  if (resourceLink && resourceLink.trim()) {
+    try {
+      const url = new URL(resourceLink.trim());
+      if (!['http:', 'https:'].includes(url.protocol)) {
+        return 'Resource link must be a valid HTTP or HTTPS URL.';
+      }
+    } catch {
+      return 'Resource link must be a valid HTTP or HTTPS URL.';
+    }
   }
 
   return null;
@@ -51,7 +62,7 @@ const getResourceById = async (req, res) => {
 const createResource = async (req, res) => {
   try {
     const { title, subject, category, description, resourceLink } = req.body;
-    const validationError = validateResource({ title, subject, category });
+    const validationError = validateResource({ title, subject, category, resourceLink });
 
     if (validationError) {
       return res.status(400).json({ message: validationError });
@@ -94,7 +105,7 @@ const updateResource = async (req, res) => {
       return res.status(403).json({ message: 'You can only edit your own resources.' });
     }
 
-    const validationError = validateResource({ title, subject, category });
+    const validationError = validateResource({ title, subject, category, resourceLink });
 
     if (validationError) {
       return res.status(400).json({ message: validationError });

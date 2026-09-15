@@ -13,9 +13,18 @@ const Resource = require('./models/Resource');
       console.log(`${i+1}. ${r.title}`);
     });
     
-    // Find test resources
+    // Find known dummy resources without modifying the database.
     const testResources = await Resource.find({
-      title: { $in: ['Test Resource', 'Test Resource from Auth'] }
+      title: {
+        $in: [
+          'Test Resource',
+          'Test Resource from Auth',
+          'API verification resource',
+          'Operating Systems Book',
+          'Web Development Assignment',
+          'Data Structures & Algorithms Past Paper',
+        ],
+      },
     });
     
     if (testResources.length > 0) {

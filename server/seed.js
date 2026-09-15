@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
+const bcrypt = require('bcryptjs');
 const Resource = require('./models/Resource');
 const User = require('./models/User');
 
@@ -25,31 +26,31 @@ const demoResources = [
   {
     title: 'Data Structures & Algorithms Past Paper',
     subject: 'Computer Science',
-    category: 'Past Paper',
+    category: 'Past Papers',
     description:
       'Past exam paper including algorithmic questions, complexity analysis, and problem-solving tasks for revision.',
-    resourceLink: 'https://example.com/dsa-past-paper',
+    resourceLink: 'https://www.geeksforgeeks.org/data-structures/',
   },
   {
     title: 'Web Development Assignment',
     subject: 'Web Development',
-    category: 'Assignment',
+    category: 'Assignments',
     description:
       'A practical assignment requiring students to build a responsive web page using HTML, CSS, and JavaScript.',
-    resourceLink: 'https://example.com/web-dev-assignment',
+    resourceLink: 'https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Structuring_content/Basic_HTML_syntax',
   },
   {
     title: 'Operating Systems Book',
     subject: 'Operating Systems',
-    category: 'Book',
+    category: 'Books',
     description:
       'A foundational textbook covering process scheduling, memory management, deadlocks, and file systems.',
-    resourceLink: 'https://example.com/operating-systems-book',
+    resourceLink: 'https://pages.cs.wisc.edu/~remzi/OSTEP/',
   },
   {
     title: 'React.js Complete Tutorial',
     subject: 'Web Development',
-    category: 'Video',
+    category: 'Videos',
     description:
       'A full tutorial walking through components, props, state, hooks, routing, and building modern React applications.',
     resourceLink: 'https://www.youtube.com/watch?v=SqcY0GlETPk',
@@ -68,7 +69,7 @@ const seedDatabase = async () => {
       demoUser = await User.create({
         name: 'Demo User',
         email: 'demo@studyvault.com',
-        password: 'studyvault123',
+        password: await bcrypt.hash('studyvault123', 10),
       });
       console.log('Created demo user.');
     }
@@ -86,7 +87,11 @@ const seedDatabase = async () => {
         insertedCount += 1;
         console.log(`Inserted: ${resource.title}`);
       } else {
-        console.log(`Skipped duplicate: ${resource.title}`);
+        await Resource.updateOne(
+          { _id: existingResource._id },
+          { $set: { ...resource, createdBy: demoUser._id } }
+        );
+        console.log(`Updated: ${resource.title}`);
       }
     }
 

@@ -39,25 +39,18 @@ function Navbar() {
               {item.label}
             </NavLink>
           ))}
-        </nav>
 
-        <div className="nav-right">
           {!user ? (
             <>
               <NavLink to="/login" className="nav-link">Login</NavLink>
               <NavLink to="/signup" className="nav-link">Sign up</NavLink>
             </>
           ) : (
-            <>
-              <div className="nav-user-info">
-                <span className="user-name">{user.name}</span>
-              </div>
-              <button type="button" className="nav-logout" onClick={handleLogout}>
-                Logout
-              </button>
-            </>
+            <button type="button" className="nav-logout" onClick={handleLogout}>
+              Logout
+            </button>
           )}
-        </div>
+        </nav>
       </div>
     </header>
   );

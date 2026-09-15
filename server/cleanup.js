@@ -1,18 +1,27 @@
 const mongoose = require('mongoose');
 const Resource = require('./models/Resource');
+const User = require('./models/User');
+
+const knownDummyTitles = [
+  'Test Resource',
+  'Test Resource from Auth',
+  'API verification resource',
+  'Operating Systems Book',
+  'Web Development Assignment',
+  'Data Structures & Algorithms Past Paper',
+];
 
 (async () => {
   try {
     await mongoose.connect('mongodb://localhost:27017/StudyVault');
     console.log('Connected to MongoDB\n');
     
-    // Delete test resources
-    const result = await Resource.deleteMany({
-      title: { $in: ['Test Resource', 'Test Resource from Auth'] }
-    });
+    const result = await Resource.deleteMany({ title: { $in: knownDummyTitles } });
+    const qaUsers = await User.deleteMany({ email: /^qa\..*@studyvault\.test$/i });
     
     console.log(`=== CLEANUP COMPLETE ===`);
-    console.log(`Deleted ${result.deletedCount} test resource(s)`);
+    console.log(`Deleted ${result.deletedCount} known dummy resource(s)`);
+    console.log(`Deleted ${qaUsers.deletedCount} disposable QA user(s)`);
     
     // Show remaining resources
     const remaining = await Resource.find({}).select('title category');

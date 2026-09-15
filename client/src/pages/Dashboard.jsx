@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getResources } from '../services/api';
-import { useAuth } from '../context/AuthContext';
 import Loading from '../components/Loading';
 import ErrorMessage from '../components/ErrorMessage';
 
@@ -27,7 +26,6 @@ const normalizeResourceCategory = (category) => {
 };
 
 function Dashboard() {
-  const { user } = useAuth();
   const [resources, setResources] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -75,12 +73,21 @@ function Dashboard() {
 
   return (
     <div className="page-shell">
-      <section className="dashboard-welcome">
-        <div className="welcome-content">
-          <h1>Welcome back, {user?.name || 'Student'}!</h1>
-          <p>Keep your study resources organized and easy to find.</p>
+      <section className="hero-panel">
+        <div>
+          <p className="eyebrow">StudyVault</p>
+          <h1>Your Study Resources, Organized.</h1>
+          <p className="hero-copy">
+            Keep your notes, course materials, and study essentials in one reliable place.
+          </p>
+        </div>
+
+        <div className="hero-actions">
           <Link to="/resources/add" className="primary-btn">
-            + Add Resource
+            Add Resource
+          </Link>
+          <Link to="/resources" className="secondary-btn">
+            View Resources
           </Link>
         </div>
       </section>
@@ -88,33 +95,21 @@ function Dashboard() {
       {error && <ErrorMessage message={error} />}
 
       <section className="stats-grid">
-        <div className="stat-card total-card">
-          <div className="stat-icon">📚</div>
-          <div className="stat-content">
-            <span className="stat-label">Total Resources</span>
-            <strong className="stat-value">{stats.total}</strong>
-          </div>
+        <div className="stat-card">
+          <span>Total Resources</span>
+          <strong>{stats.total}</strong>
         </div>
-        <div className="stat-card notes-card">
-          <div className="stat-icon">📝</div>
-          <div className="stat-content">
-            <span className="stat-label">Notes</span>
-            <strong className="stat-value">{stats.notes}</strong>
-          </div>
+        <div className="stat-card sage-card">
+          <span>Notes</span>
+          <strong>{stats.notes}</strong>
         </div>
-        <div className="stat-card papers-card">
-          <div className="stat-icon">📄</div>
-          <div className="stat-content">
-            <span className="stat-label">Past Papers</span>
-            <strong className="stat-value">{stats.papers}</strong>
-          </div>
+        <div className="stat-card">
+          <span>Past Papers</span>
+          <strong>{stats.papers}</strong>
         </div>
-        <div className="stat-card assignments-card">
-          <div className="stat-icon">✓</div>
-          <div className="stat-content">
-            <span className="stat-label">Assignments</span>
-            <strong className="stat-value">{stats.assignments}</strong>
-          </div>
+        <div className="stat-card">
+          <span>Assignments</span>
+          <strong>{stats.assignments}</strong>
         </div>
       </section>
 
