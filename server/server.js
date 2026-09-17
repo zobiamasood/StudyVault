@@ -28,6 +28,11 @@ app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/resources', resourceRoutes);
 
+
+app.get('/', (req, res) => {
+  res.json({ message: 'StudyVault API is running.' });
+});
+
 app.get('/', (req, res) => {
   res.json({ message: 'StudyVault API is running.' });
 });
