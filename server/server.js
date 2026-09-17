@@ -10,7 +10,11 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/StudyVault';
-const allowedOrigin = 'https://study-vault-delta.vercel.app';
+const allowedOrigins = new Set(['https://study-vault-delta.vercel.app']);
+const isAllowedOrigin = (origin) =>
+  !origin ||
+  allowedOrigins.has(origin) ||
+  /^https:\/\/study-vault-[a-z0-9-]+\.vercel\.app$/.test(origin);
 
 const migrateResourceOwners = async () => {
   await mongoose.connection.collection('resources').updateMany(
@@ -19,17 +23,15 @@ const migrateResourceOwners = async () => {
   );
 };
 
-app.use(cors({
-  origin: allowedOrigin,
+const corsOptions = {
+  origin: (origin, callback) => callback(null, isAllowedOrigin(origin)),
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
-}));
+};
 
-app.options('*', cors({
-  origin: allowedOrigin,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
+app.use(cors(corsOptions));
+
+app.options('*', cors(corsOptions));
 app.use(express.json());
 
 app.use('/api/auth', authRoutes);
