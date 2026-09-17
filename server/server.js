@@ -12,6 +12,13 @@ const PORT = process.env.PORT || 5000;
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/StudyVault';
 const allowedOrigin = 'https://study-vault-delta.vercel.app';
 
+const migrateResourceOwners = async () => {
+  await mongoose.connection.collection('resources').updateMany(
+    { user: { $exists: false }, createdBy: { $exists: true } },
+    [{ $set: { user: '$createdBy' } }, { $unset: 'createdBy' }]
+  );
+};
+
 app.use(cors({
   origin: allowedOrigin,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
@@ -33,13 +40,10 @@ app.get('/', (req, res) => {
   res.json({ message: 'StudyVault API is running.' });
 });
 
-app.get('/', (req, res) => {
-  res.json({ message: 'StudyVault API is running.' });
-});
-
 const startServer = async () => {
   try {
     await mongoose.connect(MONGO_URI);
+    await migrateResourceOwners();
     console.log('MongoDB connected successfully.');
 
     app.listen(PORT, () => {

@@ -6,14 +6,16 @@ import LoadingModern from '../components/LoadingModern';
 import ErrorMessageModern from '../components/ErrorMessageModern';
 import { deleteResource, getResources } from '../services/api';
 import { normalizeCategory, RESOURCE_CATEGORIES } from '../utils/resource';
+import { useAuth } from '../context/AuthContext';
 
 function ResourcesModern() {
   const location = useLocation();
+  const { user } = useAuth();
   const [resources, setResources] = useState([]); const [loading, setLoading] = useState(true); const [error, setError] = useState(''); const [notice, setNotice] = useState(location.state?.message || ''); const [searchTerm, setSearchTerm] = useState(''); const [category, setCategory] = useState('All'); const [sort, setSort] = useState('newest');
   const fetchResources = async () => { try { setLoading(true); setResources(await getResources()); setError(''); } catch { setError('Unable to load resources. Please try again.'); } finally { setLoading(false); } };
   // Fetch the MongoDB-backed collection when the library route mounts.
   // eslint-disable-next-line react-hooks/set-state-in-effect
-  useEffect(() => { fetchResources(); }, []);
+  useEffect(() => { if (!user?._id) return; setResources([]); fetchResources(); }, [user?._id]);
   useEffect(() => { if (location.state?.message) window.history.replaceState({}, document.title, window.location.pathname); }, [location.state]);
   const filtered = useMemo(() => resources.filter((resource) => { const query = searchTerm.toLowerCase(); return (category === 'All' || normalizeCategory(resource.category) === category) && [resource.title, resource.subject, resource.description].some((value) => value?.toLowerCase().includes(query)); }).sort((a, b) => sort === 'az' ? a.title.localeCompare(b.title) : sort === 'oldest' ? new Date(a.createdAt) - new Date(b.createdAt) : new Date(b.createdAt) - new Date(a.createdAt)), [resources, searchTerm, category, sort]);
   const handleDelete = async (id) => { if (!window.confirm('Are you sure you want to delete this resource?')) return; try { await deleteResource(id); setResources((current) => current.filter((resource) => resource._id !== id)); setNotice('Resource deleted successfully.'); setTimeout(() => setNotice(''), 2500); } catch { setError('Unable to delete this resource. Please try again.'); } };

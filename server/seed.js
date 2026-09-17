@@ -83,13 +83,13 @@ const seedDatabase = async () => {
       });
 
       if (!existingResource) {
-        await Resource.create({ ...resource, createdBy: demoUser._id });
+        await Resource.create({ ...resource, user: demoUser._id });
         insertedCount += 1;
         console.log(`Inserted: ${resource.title}`);
       } else {
         await Resource.updateOne(
           { _id: existingResource._id },
-          { $set: { ...resource, createdBy: demoUser._id } }
+          { $set: { ...resource, user: demoUser._id } }
         );
         console.log(`Updated: ${resource.title}`);
       }

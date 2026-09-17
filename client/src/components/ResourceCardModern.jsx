@@ -12,7 +12,7 @@ function ResourceCardModern({ resource, onDelete }) {
   const Icon = iconByCategory[category] || FileText;
   const resourceUrl = getValidResourceUrl(resource.resourceLink);
   const [linkError, setLinkError] = useState('');
-  const isOwner = resource.createdBy?._id === user?._id || resource.createdBy === user?._id;
+  const isOwner = resource.user?._id === user?._id || resource.user === user?._id;
   const handleOpenResource = () => {
     if (!resourceUrl) {
       setLinkError('This resource does not have a valid web link.');

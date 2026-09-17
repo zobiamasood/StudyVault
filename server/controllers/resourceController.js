@@ -32,7 +32,7 @@ const validateResource = (data) => {
 
 const getResources = async (req, res) => {
   try {
-    const resources = await Resource.find().sort({ createdAt: -1 }).populate('createdBy', 'name email');
+    const resources = await Resource.find({ user: req.user._id }).sort({ createdAt: -1 }).populate('user', 'name email');
     return res.status(200).json(resources);
   } catch (error) {
     return res.status(500).json({ message: 'Error fetching resources.', error: error.message });
@@ -47,7 +47,7 @@ const getResourceById = async (req, res) => {
       return res.status(400).json({ message: 'Invalid resource ID.' });
     }
 
-    const resource = await Resource.findById(id).populate('createdBy', 'name email');
+    const resource = await Resource.findOne({ _id: id, user: req.user._id }).populate('user', 'name email');
 
     if (!resource) {
       return res.status(404).json({ message: 'Resource not found.' });
@@ -74,7 +74,7 @@ const createResource = async (req, res) => {
       category: category.trim(),
       description: description ? description.trim() : '',
       resourceLink: resourceLink ? resourceLink.trim() : '',
-      createdBy: req.user._id,
+      user: req.user._id,
     });
 
     return res.status(201).json({
@@ -95,14 +95,10 @@ const updateResource = async (req, res) => {
       return res.status(400).json({ message: 'Invalid resource ID.' });
     }
 
-    const resource = await Resource.findById(id);
+    const resource = await Resource.findOne({ _id: id, user: req.user._id });
 
     if (!resource) {
       return res.status(404).json({ message: 'Resource not found.' });
-    }
-
-    if (resource.createdBy.toString() !== req.user._id.toString()) {
-      return res.status(403).json({ message: 'You can only edit your own resources.' });
     }
 
     const validationError = validateResource({ title, subject, category, resourceLink });
@@ -121,7 +117,7 @@ const updateResource = async (req, res) => {
         resourceLink: resourceLink ? resourceLink.trim() : '',
       },
       { new: true, runValidators: true }
-    ).populate('createdBy', 'name email');
+    ).populate('user', 'name email');
 
     return res.status(200).json({
       message: 'Resource updated successfully.',
@@ -140,14 +136,10 @@ const deleteResource = async (req, res) => {
       return res.status(400).json({ message: 'Invalid resource ID.' });
     }
 
-    const resource = await Resource.findById(id);
+    const resource = await Resource.findOne({ _id: id, user: req.user._id });
 
     if (!resource) {
       return res.status(404).json({ message: 'Resource not found.' });
-    }
-
-    if (resource.createdBy.toString() !== req.user._id.toString()) {
-      return res.status(403).json({ message: 'You can only delete your own resources.' });
     }
 
     await resource.deleteOne();

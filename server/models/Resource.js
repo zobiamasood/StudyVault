@@ -27,7 +27,7 @@ const resourceSchema = new mongoose.Schema(
       default: '',
       trim: true,
     },
-    createdBy: {
+    user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
       required: true,
